@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CVSS4 Scoring Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input {
+            padding: 5px;
+            margin-bottom: 15px;
+            width: 300px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>CVSS4 Scoring Calculator</h1>
+    <form id="cvssForm">
+        <label for="baseMetrics">Sum of Base Metrics (Σxi):</label>
+        <input type="number" id="baseMetrics" placeholder="Enter sum of base metrics" step="0.01" required>
+        
+        <label for="environmentalMods">Environmental Modifications:</label>
+        <input type="number" id="environmentalMods" placeholder="Enter environmental modifications" step="0.01" required>
+        
+        <button type="button" onclick="calculateScores()">Calculate</button>
+    </form>
+    
+    <div class="result" id="results"></div>
+
+    <script>
+        function calculateScores() {
+            const baseMetrics = parseFloat(document.getElementById('baseMetrics').value);
+            const environmentalMods = parseFloat(document.getElementById('environmentalMods').value);
+
+            if (isNaN(baseMetrics) || isNaN(environmentalMods)) {
+                alert('Please enter valid numeric values for all fields.');
+                return;
+            }
+
+            // Calculate Base Score
+            const baseScore = Math.min(1 - (0.95 * Math.exp(-baseMetrics)), 10).toFixed(2);
+
+            // Calculate Environmental Score
+            const environmentalScore = (parseFloat(baseScore) + environmentalMods).toFixed(2);
+
+            // Display results
+            document.getElementById('results').innerHTML = `
+                <p><strong>Base Score:</strong> ${baseScore}</p>
+                <p><strong>Environmental Score:</strong> ${environmentalScore}</p>
+            `;
+        }
+    </script>
+</body>
+</html>
